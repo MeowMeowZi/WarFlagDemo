@@ -27,8 +27,8 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        var horizontalInput = Input.GetAxis("Horizontal");
-        var verticalInput = Input.GetAxis("Vertical");
+        var horizontalInput = Input.GetAxisRaw("Horizontal");
+        var verticalInput = Input.GetAxisRaw("Vertical");
         var forward = new Vector2(_camera.transform.forward.x, _camera.transform.forward.y).normalized;
         var right = new Vector2(_camera.transform.right.x, _camera.transform.right.y).normalized;
         var direction = new Vector3(horizontalInput * right.x + verticalInput * forward.x, horizontalInput * right.y + verticalInput * forward.y, 0f).normalized;
@@ -64,19 +64,19 @@ public class Player : MonoBehaviour
         
         if (Input.GetMouseButton(1)) // 如果按住右键
         {
-            float horizontalInput = Input.GetAxis("Mouse X"); // 获取鼠标水平移动
-            float verticalInput = Input.GetAxis("Mouse Y"); // 获取鼠标垂直移动
+            float horizontalInput = Input.GetAxisRaw("Mouse X"); // 获取鼠标水平移动
+            float verticalInput = Input.GetAxisRaw("Mouse Y"); // 获取鼠标垂直移动
         
             // 计算摄像机绕玩家旋转的目标位置
             Quaternion camTurnAngleHorizontal = Quaternion.AngleAxis(horizontalInput * rotateSpeed, Vector3.forward);
-            Quaternion camTurnAngleVertical = Quaternion.AngleAxis(verticalInput * rotateSpeed, transform.right);
+            Quaternion camTurnAngleVertical = Quaternion.AngleAxis(verticalInput * rotateSpeed, _camera.transform.right);
             Quaternion camTurnAngle = camTurnAngleHorizontal * camTurnAngleVertical;
             _offset = camTurnAngle * _offset;
         
             // 将摄像机绕玩家进行旋转
             _camera.transform.position = transform.position + _offset;
             _camera.transform.RotateAround(transform.position, transform.forward, horizontalInput * rotateSpeed);
-            _camera.transform.RotateAround(transform.position, transform.right, verticalInput * rotateSpeed);
+            _camera.transform.RotateAround(transform.position, _camera.transform.right, verticalInput * rotateSpeed);
         }
         
         _spriteRenderer.transform.rotation = _camera.transform.rotation;
